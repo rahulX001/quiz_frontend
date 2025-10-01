@@ -36,7 +36,7 @@ app.post("/api/quizzes/generate", async (req, res) => {
     const { topic, count = 5 } = req.body;
 
     const prompt = `
-Generate ${count} medium and moderate hard multiple-choice questions (each with 4 options and one correct option) about: ${topic}.
+Generate ${count} hard multiple-choice questions (each with 4 options and one correct option) about: ${topic}.
 Questions should be designed to test deeper understanding, tricky concepts, or application-based reasoning (not simple recall).
 Return ONLY raw JSON in this format:
 [
