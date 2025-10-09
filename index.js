@@ -36,7 +36,7 @@ app.post("/api/quizzes/generate", async (req, res) => {
     const { topic, count = 5 } = req.body;
 
     const prompt = `
-Generate ${count} hard multiple-choice questions (each with 4 options and one correct option) about: ${topic}.
+Generate ${count} medium to easy-hard multiple-choice questions (each with 4 options and one correct option) about: ${topic}.
 Questions should be designed to test deeper understanding, tricky concepts, or application-based reasoning (not simple recall).
 Return ONLY raw JSON in this format:
 [
@@ -90,4 +90,7 @@ app.get("/api/quizzes/:id", async (req, res) => {
 
 // --- Start Server ---
 const PORT = process.env.PORT || 4000;
+app.get("/",async(req,res)=>{
+  res.send("hi");
+})
 app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
