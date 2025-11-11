@@ -1,30 +1,30 @@
+// services/gemini.js
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-function getModel(modelName) {
-  return genAI.getGenerativeModel({ model: modelName });
+function getModel(name) {
+  return genAI.getGenerativeModel({ model: name });
 }
 
 async function generate(prompt) {
   try {
-    const flashModel = getModel("gemini-2.5-flash"); // ✅ new model
+    // Try main model
+    const flashModel = getModel("gemini-2.5-flash");
     const result = await flashModel.generateContent(prompt);
     return result.response.text();
   } catch (err) {
-    if (err.message.includes("404")) {
-      console.warn("⚠️ gemini-2.5-flash not found, retrying with gemini-2.5-pro...");
-      try {
-        const proModel = getModel("gemini-2.5-pro"); // ✅ new model
-        const result = await proModel.generateContent(prompt);
-        return result.response.text();
-      } catch (innerErr) {
-        console.error("Gemini API (pro) error:", innerErr.message);
-        throw innerErr;
-      }
-    } else {
-      console.error("Gemini API error:", err.message);
-      throw err;
+    console.warn("⚠️ flash model error:", err.message);
+
+    // If model not found or overloaded — fallback to pro
+    try {
+      console.warn("👉 Using gemini-2.5-pro instead...");
+      const proModel = getModel("gemini-2.5-pro");
+      const result = await proModel.generateContent(prompt);
+      return result.response.text();
+    } catch (innerErr) {
+      console.error("❌ Gemini API Error:", innerErr.message);
+      throw innerErr;
     }
   }
 }
